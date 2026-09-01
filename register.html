@@ -1,0 +1,280 @@
+<?php
+include 'db.php';
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    // Basic validation
+    if (empty($name) || empty($email) || empty($password)) {
+        $message = "Please fill all fields.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Please enter a valid email address.";
+    } else {
+
+        // Check existing user
+        $check = $conn->prepare(
+            "SELECT id FROM users WHERE email = ?"
+        );
+        $check->bind_param("s", $email);
+        $check->execute();
+
+        $result = $check->get_result();
+
+        if ($result->num_rows > 0) {
+
+            $message = "This email is already registered.";
+
+        } else {
+
+            // IMPORTANT: Hash password
+            $hashedPassword = password_hash(
+                $password,
+                PASSWORD_DEFAULT
+            );
+
+            // Secure verification token
+            $token = bin2hex(random_bytes(32));
+
+            // Token expires after 24 hours
+            $expires = date(
+                "Y-m-d H:i:s",
+                time() + (24 * 60 * 60)
+            );
+
+            // Save user
+            $stmt = $conn->prepare(
+                "INSERT INTO users
+                (name, email, password, email_verified,
+                 verification_token, verification_expires)
+                VALUES (?, ?, ?, 0, ?, ?)"
+            );
+
+            $stmt->bind_param(
+                "sssss",
+                $name,
+                $email,
+                $hashedPassword,
+                $token,
+                $expires
+            );
+
+            if ($stmt->execute()) {
+
+                // -------------------------------
+                // SEND VERIFICATION EMAIL
+                // -------------------------------
+
+                $mail = new PHPMailer(true);
+
+                try {
+
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+
+                    // CHANGE THIS
+                    $mail->Username = 'YOUR_GMAIL@gmail.com';
+
+                    // CHANGE THIS
+                    $mail->Password = 'YOUR_GMAIL_APP_PASSWORD';
+
+                    $mail->SMTPSecure =
+                        PHPMailer::ENCRYPTION_SMTPS;
+
+                    $mail->Port = 465;
+
+                    // Sender
+                    $mail->setFrom(
+                        'YOUR_GMAIL@gmail.com',
+                        'Coderror'
+                    );
+
+                    // User email
+                    $mail->addAddress(
+                        $email,
+                        $name
+                    );
+
+                    $mail->isHTML(true);
+
+                    $mail->Subject =
+                        'Verify Your Coderror Account';
+
+                    // CHANGE YOUR DOMAIN
+                    $verificationLink =
+                        'https://YOUR-DOMAIN.com/verify.php?token='
+                        . urlencode($token);
+
+                    $mail->Body = "
+                    <html>
+                    <body>
+
+                    <h2>Welcome to Coderror!</h2>
+
+                    <p>Hello <strong>$name</strong>,</p>
+
+                    <p>
+                    Thank you for registering with Coderror.
+                    </p>
+
+                    <p>
+                    Please verify your email address
+                    to activate your account.
+                    </p>
+
+                    <p>
+                    <a href='$verificationLink'
+                    style='background:#007bff;
+                    color:white;
+                    padding:12px 20px;
+                    text-decoration:none;
+                    border-radius:5px;
+                    display:inline-block;'>
+                    Verify My Email
+                    </a>
+                    </p>
+
+                    <p>
+                    This link will expire in 24 hours.
+                    </p>
+
+                    <p>
+                    Regards,<br>
+                    <strong>Coderror Team</strong>
+                    </p>
+
+                    </body>
+                    </html>
+                    ";
+
+                    $mail->AltBody =
+                        "Verify your Coderror account: "
+                        . $verificationLink;
+
+                    $mail->send();
+
+                    $message =
+                        "Registration successful! "
+                        . "Please check your email and verify your account.";
+
+                } catch (Exception $e) {
+
+                    $message =
+                        "Account created, but verification email "
+                        . "could not be sent.";
+                }
+
+            } else {
+
+                $message = "Registration failed.";
+            }
+        }
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Register - Coderror</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+        }
+
+        .container {
+            width: 400px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Create Account</h2>
+
+    <?php if (!empty($message)): ?>
+
+        <div class="message">
+            <?php echo htmlspecialchars($message); ?>
+        </div>
+
+    <?php endif; ?>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+        >
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">
+            Register
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

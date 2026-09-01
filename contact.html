@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Coderror</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="bg-symbols" id="bgSymbols"></div>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-logo">
+            <svg viewBox="0 0 100 100"><defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#F5D76E"/><stop offset="50%" style="stop-color:#D4AF37"/><stop offset="100%" style="stop-color:#B8860B"/></linearGradient></defs><polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="url(#g1)" stroke-width="3"/><text x="50" y="62" text-anchor="middle" font-family="Courier New" font-size="32" font-weight="bold" fill="url(#g1)">&lt;/&gt;</text><circle cx="75" cy="25" r="5" fill="#FF4444" stroke="#000" stroke-width="1.5"/></svg>
+            <span class="nav-logo-text">Coderror</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.php">Home</a></li>
+            <li><a href="internship.html">Internship</a></li>
+            <li><a href="reviews.html">Reviews</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="team.html">Team</a></li>
+            <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><i class="fas fa-bars"></i></button>
+    </nav>
+
+    <div class="page-header">
+        <h1>Get In Touch</h1>
+        <p class="breadcrumb"><a href="index.php">Home</a> / Contact</p>
+    </div>
+
+    <section class="section">
+        <div class="form-grid">
+            <div class="contact-info">
+                <h2 style="font-family:'Cinzel',serif; color:var(--gold-light); margin-bottom:20px; letter-spacing:2px;">Reach Out To Us</h2>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px;">Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+                
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="contact-text">
+                        <h4>Our Office</h4>
+                        <p>Lekhraj, Indira Nagar <br>Lucknow, Uttar Pradesh 226016<br>India</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
+                    <div class="contact-text">
+                        <h4>Call Us</h4>
+                        <p>+91 7800148966<br></p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="contact-text">
+                        <h4>Email Us</h4>
+                        <p>coderrorinternship@gmail.com<br>abdulrahman780014@gmail.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                    <div class="contact-text">
+                        <h4>Working Hours</h4>
+                        <p>Mon - fri: 9:00 AM - 7:00 PM<br>Saturday,Sunday: Closed</p>
+                    </div>
+                </div>
+            </div>
+
+            <form class="content-block" id="contactForm" style="margin:0;" 
+      method="POST" action="contact.php">
+    <h2 style="margin-bottom:25px;">Send a Message</h2>
+    <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Enter your full name" required>
+    </div>
+    <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" placeholder="your.email@example.com" required>
+    </div>
+    <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" name="phone" placeholder="+91 7800148966" required>
+    </div>
+    <div class="form-group">
+        <label>Interested In</label>
+        <select name="interest" required>
+            <option value="">Select a program</option>
+            <option value="internship">Internship Program</option>
+            <option value="industrial">Industrial Training</option>
+            <option value="career">Career Services</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Your Message</label>
+        <textarea name="message" placeholder="Tell us more about your requirements..." required></textarea>
+    </div>
+    <button type="submit" class="btn" style="width:100%;">
+        <i class="fas fa-paper-plane"></i>&nbsp; Send Message
+    </button>
+</form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col"><h4>Coderror</h4><p>Empowering developers with industry-ready skills, real-world projects, and career opportunities since 2026.</p><div class="footer-socials"><a href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div></div>
+            <div class="footer-col"><h4>Programs</h4><a href="internship.html">Internship</a><a href="industrial.html">Industrial Training</a><a href="career.html">Career Services</a><a href="reviews.html">Student Reviews</a></div>
+            <div class="footer-col"><h4>Company</h4><a href="about.html">About Us</a><a href="team.html">Our Team</a><a href="contact.html">Contact</a><a href="terms.html">Terms</a></div>
+            <div class="footer-col"><h4>Contact</h4><p>📧 coderrorinternship@gmail.com</p><p>📞 +91 7800148966</p><p>📍 Lucknow, India</p></div>
+        </div>
+        <div class="footer-bottom">© 2026 Coderror. All Rights Reserved.</div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
